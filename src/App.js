@@ -1,34 +1,38 @@
 import logo from './logo.svg';
 import './App.css';
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
-import VideoList from './components/VideoList.js';
+import NavBar from './NavBar';
+import {BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import Home from './Home';
+import Create from './Create';
+import BlogDetails from './BlogDetails';
+import NotFound from './NotFound';
 
 function App() {
+  const title = "welcome hang"
   return (
-    <div ClassName="App">
-      <VideoList/>
-    </div>
-  )
+    <Router>
+      <div className="App">
+        <NavBar/>
+        <div className="content">
+          <Switch>
+            <Route exact path="/">
+              <Home/>
+            </Route>
+            <Route path="/create">
+              <Create/>
+            </Route>
+            <Route path="/blog/:id">
+              <BlogDetails/>
+            </Route>
+            <Route path="*">
+              <NotFound/>
+            </Route>           
+          </Switch>
+          
+        </div>
+      </div>
+    </Router>
+  );
 }
 
 export default App;
