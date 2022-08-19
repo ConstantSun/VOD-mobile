@@ -98,6 +98,22 @@
   box-sizing: border-box;
   display: block;
 }
+.create .uploading  {
+  background: #eaf25b;
+  color: #fff;
+  border: 0;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.create .uploaded  {
+  background: #5bf295;
+  color: #fff;
+  border: 0;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
 .create button {
   background: #f1356d;
   color: #fff;
@@ -106,7 +122,6 @@
   border-radius: 8px;
   cursor: pointer;
 }
-
 
 
 

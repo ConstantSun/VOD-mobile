@@ -3,9 +3,14 @@ import useFetch from "./useFetch";
 import { useHistory } from "react-router-dom";
 import ReactPlayer from 'react-player'
 import axios from "axios";
+import { useEffect } from "react";
+import { useState } from "react";
 
 const BlogDetails = () => {
     const {id} = useParams();
+    const [agree, setAgree] = useState(0)
+    const [disag, setDisag] = useState(0)
+    const [linkVid, setLinkVid] = useState(null)
     const {data: video, isLoading, error} = useFetch("https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/ts1/getVids/{vidId}?videoid=" + id)
     const history = useHistory();
 
@@ -29,9 +34,10 @@ const BlogDetails = () => {
                 })
         .then(()=>{
             console.log("voting saved")
-            // setIsPosting(false)
-            // history.go(-1)
-            history.push("/")
+            video.numOfAgreementsToReplay = video.numOfAgreementsToReplay + 1
+            document.getElementById('yes_choice').innerText = video.numOfAgreementsToReplay
+
+            // history.push("/")
         })
     }
     const handleNo = () => {
@@ -44,15 +50,31 @@ const BlogDetails = () => {
                 })
         .then(()=>{
             console.log("voting saved")
-            // setIsPosting(false)
-            // history.go(-1)
-            history.push("/")
+            video.numOfDisagreementsToReplay = video.numOfDisagreementsToReplay + 1
+            document.getElementById('no_choice').innerText = video.numOfDisagreementsToReplay
         })
+    }
+
+    async function handleDownload(){
+
+        let presignedUrl = await axios.get("https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/ts1/upload/genUrl",{
+            params: {
+                "bucket_name": "vod-serverless-v3-source-1e9fcxg7h46rp",
+                "file_key": video.name,
+                "expiry_time": 1000,
+                "action": "get_object"
+            }
+        })
+
+        console.log("pre-signed url:")
+        console.log(presignedUrl.data.url)
+        setLinkVid(presignedUrl.data.url)
+        
     }
     return ( 
         <div className="blog-details">
             {isLoading && <div> Loading ... </div>}
-            {error && <div> {error} </div>}
+            {error && <div> Err :  {error} </div>}
             {video && (
                 <article>
                     <h2> {video.name} </h2>
@@ -66,9 +88,11 @@ const BlogDetails = () => {
                             controls={true}
                         />
                     </div>
-                    <p>video.hlsUrl  : {video.hlsUrl}</p>
-                    <p>Vote for replaying: {video.numOfAgreementsToReplay} people</p>
-                    <p>Vote for non-replaying  : {video.numOfDisagreementsToReplay} people</p>
+                    <button onClick={handleDownload}>Get link to download video</button>
+                    {linkVid && <a href={linkVid} download>Click to download</a>}
+
+                    <p>Vote for replaying: <text id="yes_choice">{video.numOfAgreementsToReplay}</text>  people</p>
+                    <p>Vote for non-replaying  : <text id="no_choice"> {video.numOfDisagreementsToReplay}</text> people</p>
                     <br>
                     </br>
                     <p>Do you wanna replay the match ?</p>

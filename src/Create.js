@@ -1,13 +1,16 @@
 import axios from "axios";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import Box from "@mui/material/Box";
+import { LinearProgress } from '@mui/material';
+import CheckIcon from "@material-ui/icons/Check";
+import Typography from "@material-ui/core/Typography";
 
 const Create = () => {
-    const [title, setTitle] = useState('')
-    const [selectedFile, setSelectedFile] = useState('')
-    const [author, setAuthor] = useState('yoshi')
-    const [isPosting, setIsPosting] = useState(false)
     const history = useHistory();
+    const [progress, setProgress] = useState(0);
+    const [isSuccess, setIsSuccess] = useState(false)
+
     const [file, setFile] = useState('');
      
     // Handles file upload event and updates state
@@ -15,10 +18,11 @@ const Create = () => {
         setFile(event.target.files[0]);
         console.log(event.target.files[0].name)
         console.log("file name: ", file.name)
+        setIsSuccess(false)
 
         let presignedUrl = await axios.get("https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/ts1/upload/genUrl",{
             params: {
-                "bucket_name": "presigned-test-00",
+                "bucket_name": "vod-serverless-v3-source-1e9fcxg7h46rp",
                 "file_key": event.target.files[0].name,
                 "expiry_time": 1000,
                 "action": "upload"
@@ -27,10 +31,22 @@ const Create = () => {
 
         console.log("pre-signed url:")
         console.log(presignedUrl.data.url)
-        await axios.put(presignedUrl.data.url, event.target.files[0])
+        await axios.put(presignedUrl.data.url, event.target.files[0],{
+            onUploadProgress: (progressEvent) => {
+                const progress = (progressEvent.loaded / progressEvent.total) * 100;
+                setProgress(progress);
+              },
+            onDownloadProgress: (progressEvent) => {
+            const progress = (progressEvent.loaded / progressEvent.total) * 100;
+            console.log(progress);
+            setProgress(progress);
+            },
+        })
             .then(function(res){
                 console.log(res)
                 console.log("success----------------------------------------")
+                setIsSuccess(true)
+
             })
             .catch(function(err){
                 console.log(err)
@@ -38,84 +54,30 @@ const Create = () => {
             }); 
         console.log("axios put done")
 
-
-        // fetch(api, {
-        //     method: "PUT",
-        //     headers: {
-        //       "Content-Type": "multipart/form-data"
-        //     },
-        //     body: file
-        //   })
-        // .then((res) => {
-        // console.log("success upload s3")
-        // console.log(res)
-        // })
-        // .catch((err)=>{
-        // console.log(err)
-        // })
     }
       
     return ( 
         <div className="create">
-
-
-            <input type="file" onChange={handleUpload} />
-            <p>Filename: {file.name}</p>
-            <p>File type: {file.type}</p>
-
-
-            {/* <h2>Upload a new video</h2>
+            <h2>Upload a new video</h2>
             <form >
-                <label>Video title:</label>
-                <input 
-                    type="text"
-                    required
-                    value={title}
-                    onChange={(e) => {setTitle(e.target.value)}}
-                />
+                <label>Your video:</label>
+                <input type="file" onChange={handleUpload} />
+                <br></br>
+                <label>Video title: {file.name}</label> <br></br>
+                <label>Video type : {file.type}</label> <br></br>
 
-                <label>Select video:</label>
-                <input 
-                    type="file"
-                    required
-                    id="fileInput"
-                    onChange={onFileChange}
-                /> */}
+                { isSuccess ? (
+                <Box color='success.main' display="flex">
+                    <CheckIcon color="success" />
+                    <Typography>Video uploaded</Typography>
+                </Box>
+                ) : (
+                <>
+                    <LinearProgress variant="determinate" value={progress} />
+                </>
+                )}
 
-
-
-
-                {/* <h3> 
-                File Upload using React! 
-                </h3> 
-                <div> 
-                    <input type="file" onChange={onFileChange} /> 
-                    <button onClick={onFileUpload}> 
-                    Upload! 
-                    </button> 
-                </div>  */}
-
-                {/* <label>Blog body:</label>
-                <textarea 
-                    required
-                    value={body}
-                    onChange={(e) => setBody(e.target.value)}>
-                </textarea> */}
-
-                {/* <label>Blog author: </label>
-                <select
-                    value={author}
-                    onChange={(e)=> setAuthor(e.target.value)}
-                >
-                    <option value="mario"> mario </option>
-                    <option value="yoshi"> yoshi </option>
-                </select> */}
-                {/* { !isPosting && <button onClick={onFileUpload} >Click to start uploading</button>} */}
-                { isPosting && <button disabled>Uploading video ... </button>}
-                {/* <p>{selectedFile}</p> */}
-
-
-            {/* </form> */}
+            </form>
         </div>
      );
 }

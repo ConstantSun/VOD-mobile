@@ -11,7 +11,7 @@ const BlogList = ({videos, title, handleDelete}) => {
                             <h2> {video.name} </h2>
                             <p> Uploaded time {video.dateUpload}</p>
                             <img class="fit"
-                                src={video.ThumbNail}
+                                src={video.ThumbNail[0]}
                                 alt="dm"
                             />
                         </Link>
