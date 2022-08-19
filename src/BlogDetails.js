@@ -5,6 +5,7 @@ import ReactPlayer from 'react-player'
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
+import ReactHlsPlayer from 'react-hls-player';
 
 const BlogDetails = () => {
     const {id} = useParams();
@@ -72,7 +73,7 @@ const BlogDetails = () => {
         
     }
     return ( 
-        <div className="blog-details">
+        <div className="blog-details" >
             {isLoading && <div> Loading ... </div>}
             {error && <div> Err :  {error} </div>}
             {video && (
@@ -80,14 +81,16 @@ const BlogDetails = () => {
                     <h2> {video.name} </h2>
                     <p> Uploaded date {video.dateUpload}</p>
                     <div className='player-wrapper'>
-                        <ReactPlayer
+                        <ReactHlsPlayer
                             className='react-player'
-                            url={video.hlsUrl}
+                            src={video.hlsUrl}
                             width='100%'
                             height='70%'
                             controls={true}
+                            
                         />
                     </div>
+                    <p>src link: {video.hlsUrl}</p>
                     <button onClick={handleDownload}>Get link to download video</button>
                     {linkVid && <a href={linkVid} download>Click to download</a>}
 

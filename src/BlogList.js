@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 const BlogList = ({videos, title, handleDelete}) => {
     return (
         <div>
-            <h2>{title}</h2>
+            {/* <h2>{title}</h2> */}
             {videos.map(
                 (video)=>(
                     <div className="blog-preview" key={video.id}>

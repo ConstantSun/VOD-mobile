@@ -7,11 +7,11 @@ const useFetch = (url) => {
     const [error, setError] = useState(null)
 
     useEffect(()=>{
-        const abortCont = new AbortController();
+        // const abortCont = new AbortController();
 
         setTimeout(() => {
                 fetch(url
-                    , {signal: abortCont.signal}
+                    // , {signal: abortCont.signal}
                     )
                 .then(res => {
                     if (!res.ok){
@@ -26,10 +26,10 @@ const useFetch = (url) => {
                         setData(data)
                         console.log("link video : ",data.hlsUrl)
                     }
-                    else
+                    else{
                         setData(data.body)
                         console.log("link video : ",data.body.hlsUrl)
-
+                    }
 
                     setIsLoading(false)
                     setError(null)
@@ -47,7 +47,7 @@ const useFetch = (url) => {
 
                 });
         }, 0);
-        return () => abortCont.abort();
+        // return () => abortCont.abort();
     }, [url])   
     
     return {data, isLoading, error}
