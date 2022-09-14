@@ -7,15 +7,15 @@ import { useEffect } from "react";
 import { useState } from "react";
 import ReactHlsPlayer from 'react-hls-player';
 
-const BlogDetails = ({access_tk}) => {
+const BlogDetails = ({access_tk_gb}) => {
     const {id} = useParams();
     const [agree, setAgree] = useState(0)
     const [disag, setDisag] = useState(0)
     const [linkVid, setLinkVid] = useState(null)
     const {data: video, isLoading, error} = useFetch("https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/ts1/getVids/{vidId}?videoid=" + id)
     // const history = useHistory();
-    console.log("\nBlog details: access_tk")
-    console.log(access_tk)
+    console.log("\nBlog details: access_tk_gb")
+    console.log(access_tk_gb)
 
     const handleClick = () => {
         fetch("http://localhost:8000/blogs/"+id, {
@@ -58,10 +58,11 @@ const BlogDetails = ({access_tk}) => {
         })
     }
 
-    async function handleDownload(){
+    async function  handleDownload(){
 
         let presignedUrl = await axios.get("https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/ts1/upload/genUrl",{
             params: {
+                "access_tk": access_tk_gb,
                 "bucket_name": "vod-serverless-v3-source-1e9fcxg7h46rp",
                 "file_key": video.name,
                 "expiry_time": 1000,
@@ -72,7 +73,6 @@ const BlogDetails = ({access_tk}) => {
         console.log("pre-signed url:")
         console.log(presignedUrl.data.url)
         setLinkVid(presignedUrl.data.url)
-        
     }
     return ( 
         <div className="blog-details" >
@@ -92,7 +92,7 @@ const BlogDetails = ({access_tk}) => {
                             
                         />
                     </div>
-                    <p>src link: {video.hlsUrl}</p>
+                    {/* <p>src link: {video.hlsUrl}</p> */}
                     <button onClick={handleDownload}>Get link to download video</button>
                     {linkVid && <a href={linkVid} download>Click to download</a>}
 

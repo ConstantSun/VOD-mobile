@@ -10,7 +10,7 @@ import { useState } from 'react';
 
 function App() {
   const title = "welcome hang"
-  const [access_tk_gb, setAccess_tk_gb] = useState("accessTokenTesting")
+  const [access_tk_gb, setAccess_tk_gb] = useState("init")
 
   return (
     <Router>
@@ -19,7 +19,7 @@ function App() {
         <NavBar/>
         <div className="content">
           <Routes>
-            <Route exact path='/' element={<Home setAcc_gb={setAccess_tk_gb}/>} />
+            <Route exact path='/' element={<Home access_gb={access_tk_gb} setAcc_gb={setAccess_tk_gb}/>} />
             <Route exact path='/create' element={<Create access_tk_gb={access_tk_gb}/>} />    
             <Route exact path='/blog/:id' element={<BlogDetails access_tk_gb={access_tk_gb}/>} />
             <Route exact path='*' element={<NotFound/>} />

@@ -11,6 +11,7 @@ const Create = ({access_tk_gb}) => {
     const [progress, setProgress] = useState(0);
     const [isSuccess, setIsSuccess] = useState(false)
     const [file, setFile] = useState('');
+    const [auth,setAuth] = useState(null);
 
     console.log("\n Create details: access_tk")
     console.log(access_tk_gb)    
@@ -24,15 +25,21 @@ const Create = ({access_tk_gb}) => {
 
         let presignedUrl = await axios.get("https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/ts1/upload/genUrl",{
             params: {
+                "access_tk": access_tk_gb,
                 "bucket_name": "vod-serverless-v3-source-1e9fcxg7h46rp",
                 "file_key": event.target.files[0].name,
                 "expiry_time": 1000,
                 "action": "upload"
             }
         })
-
+        if (presignedUrl.data.url == "null"){
+            setAuth(null)
+        }
+        else
+            setAuth("admin")
         console.log("pre-signed url:")
         console.log(presignedUrl.data.url)
+
         await axios.put(presignedUrl.data.url, event.target.files[0],{
             onUploadProgress: (progressEvent) => {
                 const progress = (progressEvent.loaded / progressEvent.total) * 100;
@@ -60,26 +67,29 @@ const Create = ({access_tk_gb}) => {
       
     return ( 
         <div className="create">
-            <h2>Upload a new video</h2>
-            <form >
-                <label>Your video:</label>
-                <input type="file" onChange={handleUpload} />
-                <br></br>
-                <label>Video title: {file.name}</label> <br></br>
-                <label>Video type : {file.type}</label> <br></br>
+            {!auth && <h2>You must be admin to upload video !</h2>}
+            {auth && <h2>Upload a new video</h2> }
+                
+            {auth &&    
+                <form >
+                    <label>Your video:</label>
+                    <input type="file" onChange={handleUpload} />
+                    <br></br>
+                    <label>Video title: {file.name}</label> <br></br>
+                    <label>Video type : {file.type}</label> <br></br>
 
-                { isSuccess ? (
-                <Box color='success.main' display="flex">
-                    <CheckIcon color="success" />
-                    <Typography>Video uploaded</Typography>
-                </Box>
-                ) : (
-                <>
-                    <LinearProgress variant="determinate" value={progress} />
-                </>
-                )}
-
-            </form>
+                    { isSuccess ? (
+                    <Box color='success.main' display="flex">
+                        <CheckIcon color="success" />
+                        <Typography>Video uploaded</Typography>
+                    </Box>
+                    ) : (
+                    <>
+                        <LinearProgress variant="determinate" value={progress} />
+                    </>
+                    )}
+                </form>
+            }
         </div>
      );
 }

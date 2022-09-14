@@ -12,8 +12,8 @@ const useFetch = (url, access_tk) => {
         setTimeout(() => {
                 fetch(url, {
                     method: 'GET',
-                    withCredentials: true,
-                    credentials: 'include',
+                    // withCredentials: true,
+                    // credentials: 'include',
                     headers: {
                         'Authorization': access_tk
                     }
