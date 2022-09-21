@@ -1,7 +1,8 @@
 // Custom Hook file needs to start with 'use' word
 import { useState, useEffect } from "react"
 const useFetch = (url, access_tk) => {
-    console.log("URL : ", url)
+    console.log("useFetch\nURL : ", url)
+    console.log("access_tk : ", access_tk)
     const [data, setData] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState(null)

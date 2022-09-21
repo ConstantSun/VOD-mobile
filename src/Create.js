@@ -5,16 +5,17 @@ import Box from "@mui/material/Box";
 import { LinearProgress } from '@mui/material';
 import CheckIcon from "@material-ui/icons/Check";
 import Typography from "@material-ui/core/Typography";
+import { useNavigate } from "react-router-dom";
 
-const Create = ({access_tk_gb}) => {
+const Create = () => {
     // const history = useHistory();
     const [progress, setProgress] = useState(0);
     const [isSuccess, setIsSuccess] = useState(false)
     const [file, setFile] = useState('');
-    const [auth,setAuth] = useState(null);
+    const [auth,setAuth] = useState("true");
 
     console.log("\n Create details: access_tk")
-    console.log(access_tk_gb)    
+    console.log(localStorage.getItem('access_tk'))  
      
     // Handles file upload event and updates state
     async function handleUpload(event) {
@@ -25,14 +26,14 @@ const Create = ({access_tk_gb}) => {
 
         let presignedUrl = await axios.get("https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/ts1/upload/genUrl",{
             params: {
-                "access_tk": access_tk_gb,
+                "access_tk": localStorage.getItem('access_tk'),
                 "bucket_name": "vod-serverless-v3-source-1e9fcxg7h46rp",
                 "file_key": event.target.files[0].name,
                 "expiry_time": 1000,
                 "action": "upload"
             }
         })
-        if (presignedUrl.data.url == "null"){
+        if (presignedUrl.data.url == "null" || !presignedUrl.data.url){
             setAuth(null)
         }
         else
@@ -64,16 +65,24 @@ const Create = ({access_tk_gb}) => {
         console.log("axios put done")
 
     }
+
+    const navigate = useNavigate();
+    
+    const handleLogin = () => {
+        navigate("/");
+    }    
       
     return ( 
         <div className="create">
-            {!auth && <h2>You must be admin to upload video !</h2>}
-            {auth && <h2>Upload a new video</h2> }
+            {/* {!auth && <h2>You must be admin to upload video !</h2>}
+            {auth && <h2>Upload a new video</h2> } */}
+            <h2>Upload a new video</h2>
                 
-            {auth &&    
+            {/* {auth &&     */}
                 <form >
                     <label>Your video:</label>
                     <input type="file" onChange={handleUpload} />
+                    {!auth && <h2>Error: You must be admin to upload video ! Try <button onClick={handleLogin}>Log in</button> </h2>}
                     <br></br>
                     <label>Video title: {file.name}</label> <br></br>
                     <label>Video type : {file.type}</label> <br></br>
@@ -89,7 +98,7 @@ const Create = ({access_tk_gb}) => {
                     </>
                     )}
                 </form>
-            }
+            {/* } */}
         </div>
      );
 }
