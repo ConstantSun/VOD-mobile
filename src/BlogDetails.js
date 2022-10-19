@@ -13,19 +13,17 @@ const BlogDetails = () => {
     const [agree, setAgree] = useState(0)
     const [disag, setDisag] = useState(0)
     const [linkVid, setLinkVid] = useState(null)
-    const {data: video, isLoading, error} = useFetch("https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/ts1/getVids/{vidId}?videoid=" + id, localStorage.getItem('access_tk'))
+    const {data: video, isLoading, error} = useFetch("https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/demo/getVids/{vidId}?videoid=" + id, localStorage.getItem('access_tk'))
     // const history = useHistory();
     console.log("\nBlog details: access_tk")
     console.log(localStorage.getItem('access_tk'))
-
-
 
 
     const requestOptions = {
         method: 'POST',
         headers: { 
             'Access-Control-Allow-Headers' : 'Origin, Authorization',
-            'Access-Control-Allow-Origin' : '*',
+            'Origin' : '*',
             'Authorization': localStorage.getItem("access_tk") ,
             // 'Access-Control-Allow-Credentials' : true,
             // "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT"
@@ -36,15 +34,15 @@ const BlogDetails = () => {
                     videoid: id,
                     userRes: "yes"
                 }
-    };
-    fetch('https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/ts1/getVids/{vidId}/vote', requestOptions)
+    };    
+    fetch('https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/demo/getVids/{vidId}/vote', requestOptions)
     .then(response => console.log(response.json()))
     .then(data => this.setState({ postId: data.id }));
 
 
 
 
-    
+
 
 
     const handleClick = () => {
@@ -63,7 +61,7 @@ const BlogDetails = () => {
         const testVar = localStorage.getItem('access_token')
         const ans = "yes"
 
-        // axios.post("https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/ts1/getVids/{vidId}/vote", null, 
+        // axios.post("https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/demo/getVids/{vidId}/vote", null, 
         //     { 
         //     params:  
         //         {
@@ -86,7 +84,7 @@ const BlogDetails = () => {
         //     userId:1
         // }
         
-        // fetch('https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/ts1/getVids/{vidId}/vote', {
+        // fetch('https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/demo/getVids/{vidId}/vote', {
         //     method: "POST",
         //     body: {
         //         "videoid": id,
@@ -98,7 +96,7 @@ const BlogDetails = () => {
         // .then(response => response.json()) 
         // .then(json => console.log(json));
 
-        // axios.post("https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/ts1/getVids/{vidId}/vote",null, {
+        // axios.post("https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/demo/getVids/{vidId}/vote",null, {
         //                 params:
         //                 {
         //                     videoid: id,
@@ -116,7 +114,7 @@ const BlogDetails = () => {
         // Send a POST request
         // axios({
         //     method: 'post',
-        //     url: 'https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/ts1/getVids/{vidId}/vote',
+        //     url: 'https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/demo/getVids/{vidId}/vote',
         //     body: {
         //         videoid: id,
         //         userRes: "yes"
@@ -127,7 +125,7 @@ const BlogDetails = () => {
         // });     
 
         
-        // axios.post('https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/ts1/getVids/{vidId}/vote', 
+        // axios.post('https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/demo/getVids/{vidId}/vote', 
         //     {
         //                     videoid: id,
         //                     userRes: "yes"
@@ -158,7 +156,7 @@ const BlogDetails = () => {
                         userRes: "yes"
                     }
         };
-        fetch('https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/ts1/getVids/{vidId}/vote', requestOptions)
+        fetch('https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/demo/getVids/{vidId}/vote', requestOptions)
         .then(response => console.log(response.json()))
         .then(data => this.setState({ postId: data.id }));
 
@@ -174,7 +172,7 @@ const BlogDetails = () => {
         // let resultApi =  $.ajax({
         //         cache: false,
         //         type: "POST",
-        //         url:  "https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/ts1/getVids/{vidId}/vote",
+        //         url:  "https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/demo/getVids/{vidId}/vote",
         //         headers: headers,
         //         data: data
         // });
@@ -184,7 +182,7 @@ const BlogDetails = () => {
     const handleNo = () => {
         video.numOfDisagreementsToReplay = video.numOfDisagreementsToReplay + 1
         document.getElementById('no_choice').innerText = video.numOfDisagreementsToReplay
-        axios.post("https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/ts1/getVids/{vidId}/vote", null, 
+        axios.post("https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/demo/getVids/{vidId}/vote", null, 
             { 
             params:  
                 {
@@ -200,7 +198,7 @@ const BlogDetails = () => {
 
     async function  handleDownload(){
 
-        let presignedUrl = await axios.get("https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/ts1/upload/genUrl",{
+        let presignedUrl = await axios.get("https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/demo/upload/genUrl",{
             params: {
                 "access_tk": localStorage.getItem('access_tk'),
                 "bucket_name": "vod-serverless-v3-source-1e9fcxg7h46rp",

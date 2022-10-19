@@ -30,7 +30,7 @@ export default function Home() {
         navigate("/");
     }
     
-    const {data: blogs, isLoading, error} = useFetch("https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/ts1/getVids", localStorage.getItem('access_tk'))
+    const {data: blogs, isLoading, error} = useFetch("https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/demo/getVids", localStorage.getItem('access_tk'))
     return ( 
         <div className="home">
             {error && <div>{error}, try <button onClick={handleClick}>Log in</button> </div>}

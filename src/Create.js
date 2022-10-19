@@ -24,7 +24,7 @@ const Create = () => {
         console.log("file name: ", file.name)
         setIsSuccess(false)
 
-        let presignedUrl = await axios.get("https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/ts1/upload/genUrl",{
+        let presignedUrl = await axios.get("https://yhd9zfpvc9.execute-api.us-east-1.amazonaws.com/demo/upload/genUrl",{
             params: {
                 "access_tk": localStorage.getItem('access_tk'),
                 "bucket_name": "vod-serverless-v3-source-1e9fcxg7h46rp",
